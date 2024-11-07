@@ -1,0 +1,54 @@
+auth:
+  enabled: false
+master:
+  # See [^1].
+  extraVolumes:
+    - configMap:
+        defaultMode: 493
+        name: tls-root-ca
+        items:
+        - key: ca.crt
+          path: ca.crt
+      name: tls-root-ca
+  # See [^1].
+  extraVolumeMounts:
+    - mountPath: /opt/bitnami/redis/ca-cert/ca.crt
+      name: tls-root-ca
+      readonly: true
+      subPath: ca.crt
+replica:
+  configuration: |-
+    # Use TLS for replication.
+    tls-replication yes
+  # See [^1].
+  extraVolumes:
+    - configMap:
+        defaultMode: 493
+        name: tls-root-ca
+        items:
+        - key: ca.crt
+          path: ca.crt
+      name: tls-root-ca
+  # See [^1].
+  extraVolumeMounts:
+    - mountPath: /opt/bitnami/redis/ca-cert/ca.crt
+      name: tls-root-ca
+      readonly: true
+      subPath: ca.crt
+  replicaCount: 1
+tls:
+  authClients: false
+  enabled: true
+  existingSecret: redis-tls
+  certFilename: tls.crt
+  certKeyFilename: tls.key
+  # See [^1].
+  certCAFilename: ../ca-cert/ca.crt
+
+# [^1]:
+# Some hacks are required to provide a root CA certificate that will make redis
+# happy when communicating within the cluster using `redis-cli`.  Because the
+# helm chart doesn't offer an alternate source for the CA cert other than from
+# the secret containing the actual certificate, we're forced to mount the root
+# certificate to the pods and use a relative path hack to make a useful root CA
+# available for internal use. Lame.
