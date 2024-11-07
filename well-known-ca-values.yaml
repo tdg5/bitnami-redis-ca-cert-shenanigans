@@ -1,0 +1,17 @@
+auth:
+  enabled: false
+replica:
+  configuration: |-
+    # Use TLS for replication.
+    tls-replication yes
+tls:
+  authClients: false
+  enabled: true
+  existingSecret: redis-tls
+  certFilename: tls.crt
+  certKeyFilename: tls.key
+
+  # NOTE: Multiple extra ../ included to ensure the root is reached in case the
+  # path /opt/bitnami/redis/certs were changed to a different, deeper path.
+  # If the CA is well known and trusted by Ubuntu, the system CA bundle can be used like so:
+  certCAFilename: ../../../../../../../../../../../../../etc/ssl/certs/ca-certificates.crt

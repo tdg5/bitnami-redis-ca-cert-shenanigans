@@ -39,3 +39,8 @@ or
 ```bash
 ./scripts/kustomize.sh
 ```
+
+## Handling well known CAs
+
+See `well-known-ca-values.yaml` for a simpler hack that can be used for well
+known CAs that are trusted by Ubuntu.

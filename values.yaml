@@ -35,7 +35,6 @@ replica:
       name: tls-root-ca
       readonly: true
       subPath: ca.crt
-  replicaCount: 1
 tls:
   authClients: false
   enabled: true
